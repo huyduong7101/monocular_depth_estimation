@@ -31,14 +31,14 @@ cd ..
 <font color=blue>**Warning:**</font> <font color=white>it weighs about 175GB, so make sure you have enough space to unzip too!</font>
 
 # 3. How to run
-We have two versions corresponding to [VDT_Phase1]("document/Report_VDT_2022_Phase1.pdf") and [VDT_Phase2]("document/Report_VDT_2022_Phase2.pdf"). 
+We have two versions corresponding to [VDT_Phase1](document/Report_VDT_2022_Phase1.pdf) and [VDT_Phase2](document/Report_VDT_2022_Phase2.pdf). 
 
-To run [VDT_Phase1]("document/Report_VDT_2022_Phase1.pdf")
+To run [VDT_Phase1](document/Report_VDT_2022_Phase1.pdf)
 ```shell
 CUDA_VISIBLE_DEVICES=0 python train.py --model_name densenet-hr-depth --split eigen_zhou --backbone densenet --depth_decoder hr-depth --png
 ```
 
-To run [VDT_Phase2]("document/Report_VDT_2022_Phase2.pdf")
+To run [VDT_Phase2](document/Report_VDT_2022_Phase2.pdf)
 ```shell
 CUDA_VISIBLE_DEVICES=0 python train_v2.py
 ```
