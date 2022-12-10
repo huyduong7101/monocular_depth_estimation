@@ -1,36 +1,26 @@
-# Dự đoán độ sâu sử dụng phương pháp học Self-supervised
-
-Đây là phần implementation cho training và evaluation cho bài toán dự đoán độ sâu được đề xuất trong
-
->[Dự đoán độ sâu sử dụng phương pháp học Self-supervised](./miniproject-report-LeHuyDuong-official.pdf) - Viettel Digital Talent 2022 - Giai đoạn 1
->
->Dương Lê Huy - huyduong7101@gmail.com, Nam Nguyễn Văn - namnv78@viettel.com.vn
-
+# Monocular depth estimation with Self-supervised method - Viettel Digital 2022
+# 1. Overview
+- Problem: Depth Estimation
 <p align="center">
-  <img src="assets/kitti_input/26_20.png" alt="example input output gif" width="600" />
-</p>
-<p align="center">
-  <img src="assets/densenet/26_20_disp.jpeg" alt="example input output gif" width="600" />
+  <img src="assets/teaser.gif" alt="example input output gif" width="80%" />
 </p>
 
-**Note:** Phần implementation gốc là từ [Monodepth2](https://github.com/nianticlabs/monodepth2), chúng tôi đã chỉnh sửa lại phần code để phù hợp với mô hình được đề xuất trong [report](./miniproject-report-LeHuyDuong-official.pdf).
+- Method: Monocular depth estimation with self-supervised, based on [Monodepth2](https://github.com/nianticlabs/monodepth2) and HRDepth. Our proposal methods are detailed in folder [document]("document")
 
-## Update
-**2022.1.21**
-1. Phiên bản chính thức đầu tiên
+- Dataset: KITTI
 
-## Setup
-Chúng tôi huấn luyện mô hình trên Ubuntu 18.04, Python 3.6.6, PyTorch 1.10.1 và CUDA 11.1
+# 2. Set up
+We ran our experiments with PyTorch 1.10.1, CUDA 11.1, Python 3.6.6 and Ubuntu 18.04
 
 ## KITTI training data
 
-Bạn có thể donwload bộ dữ liệu [KITTI_raw dataset]() bằng câu lệnh:
+You can download the entire [KITTI_raw dataset]() by running:
 
 ```shell
 wget -i splits/kitti_archives_to_download.txt -P kitti_data/
 ```
 
-Sau đó unzip với
+Then unzip with
 
 ```shell
 cd kitti_data
@@ -38,36 +28,33 @@ unzip "*.zip"
 cd ..
 ```
 
-<font color=blue>**Warning:**</font> <font color=white>Bộ dữ liệu KITTI RAW có dung lượng khoảng 175GB</font>
+<font color=blue>**Warning:**</font> <font color=white>it weighs about 175GB, so make sure you have enough space to unzip too!</font>
 
-## Training
+# 3. How to run
+We have two versions corresponding to [VDT_Phase1]("document/Report_VDT_2022_Phase1.pdf") and [VDT_Phase2]("document/Report_VDT_2022_Phase2.pdf"). 
 
-Tham số model và các tensorboard event files được lưu mặc định trong `history` folder.
-Bạn có thể thay đổi bởi --log_dir flag
-
+To run [VDT_Phase1]("document/Report_VDT_2022_Phase1.pdf")
 ```shell
 CUDA_VISIBLE_DEVICES=0 python train.py --model_name densenet-hr-depth --split eigen_zhou --backbone densenet --depth_decoder hr-depth --png
 ```
 
-## KITTI evaluation
+To run [VDT_Phase2]("document/Report_VDT_2022_Phase2.pdf")
+```shell
+CUDA_VISIBLE_DEVICES=0 python train_v2.py
+```
 
-Xây dựng ground truth cho bộ evaluation
+## 📊 KITTI evaluation
+
+To prepare the ground truth depth maps run:
 ```shell
 python export_gt_depth.py --data_path kitti_data --split eigen
 python export_gt_depth.py --data_path kitti_data --split eigen_benchmark
 ```
+...assuming that you have placed the KITTI dataset in the default location of `./kitti_data/`.
 
-Evaluation với weight điều chỉnh từ --load_weights_folder flag với --eval_split default là eigen
+The following example command evaluates the epoch 19 weights of a model named `densenet`:
 ```shell
 python evaluate_depth.py --load_weights_folder ./densenet/models/weights_19/ --eval_mono --backbone densenet --depth_decoder hr-depth
-```
-
-## Prediction for a single image
-
-Bạn có thể dự đoán depth map từ một ảnh đơn với câu lệnh
-
-```shell
-python test_simple.py --image_path assets/test_image.jpg --model_name densenet-hr
 ```
 
 
